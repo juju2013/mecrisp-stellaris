@@ -5,3 +5,5 @@
 *.srec
 *.o
 *-linux
+.gdbinit
+*.ini
