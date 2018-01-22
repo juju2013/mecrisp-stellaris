@@ -87,22 +87,30 @@ Reset: @ Einsprung zu Beginn
 @ -----------------------------------------------------------------------------
 Nuc123_init:
 
-  nop
-  @--- various board init
-  bl      Board_init
+    nop
+    @--- various board init
+    bl      Board_init
 
-   @ Initialisierungen der Hardware, habe und brauche noch keinen Datenstack dafür
-   @ Initialisations for Terminal hardware, without Datastack.
-   bl uart_init
+    @ Initialisierungen der Hardware, habe und brauche noch keinen Datenstack dafür
+    @ Initialisations for Terminal hardware, without Datastack.
+    bl uart_init
 
-   @ Catch the pointers for Flash dictionary
-   .include "../common/catchflashpointers.s"
- 
-   welcome " with M0 core by Matthias Koch"
-   writeln "Modified for NUC123 by juju2013"
+    @ Catch the pointers for Flash dictionary
+    .include "../common/catchflashpointers.s"
 
-   @ Ready to fly ! 
-   .include "../common/boot.s"
+    welcome " with M0 core by Matthias Koch"
+    writeln " _____              _             "
+    writeln "|_   _|            | |            "
+    writeln "  | |_ __ __ _  ___| | _____ _ __ "
+    writeln "  | | '__/ _` |/ __| |/ / _ \\ '__|"
+    writeln "  | | | | (_| | (__|   <  __/ |   "
+    writeln "  \\_/_|  \\__,_|\\___|_|\\_\\___|_|   "
+    writeln ""
+    writeln "Modified for NUC123 by juju2013"
+    writeln ""
+
+    @ Ready to fly ! 
+    .include "../common/boot.s"
 
 @ -----------------------------------------------------------------------------
 Board_init: @ Initialize the board
@@ -156,10 +164,10 @@ Board_init: @ Initialize the board
   ldr     r1, =BIT16
   str     r1, [r4]
   
-  @--- UART0 clock select
-  ldr     r4, =CLKSEL1
-  ldr     r1, =~(BIT25+BIT24)
-  str     r1, [r4]
+  @--- UART0 clock select: default=use internal 22Mhz
+  @ldr     r4, =CLKSEL1
+  @ldr     r1, =~(BIT25+BIT24)
+  @str     r1, [r4]
 
   @--- unlock flash
   @ldr     r4, =CONFIG0

@@ -203,17 +203,6 @@ uart_init:
     ldr   r0, =UART0_INT
     str   r0, [r1]
 
-    @--- output test string   
-    ldr    r2, =UA_THR
-    movs   r0, #84
-    strb   r0,[r2]
-    movs   r0, #101
-    strb   r0,[r2]
-    movs   r0, #115
-    strb   r0,[r2]
-    movs   r0, #116
-    strb   r0,[r2]
-  
     pop {pc}
 
 .include "../common/terminalhooks.s"
