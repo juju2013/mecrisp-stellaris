@@ -41,7 +41,7 @@
 @ Constants for the size of the RAM memory
 
 .equ RamAnfang, 0x20000000 @ Start of RAM           Porting: Change this !
-.equ RamEnde,   0x20001000 @ End   of RAM.   20 kb. Porting: Change this !
+.equ RamEnde,   0x20005000 @ End   of RAM.   20 kb. Porting: Change this !
 
 @ Constants for the size and layout of the flash memory
 
@@ -118,13 +118,14 @@ Board_init: @ Initialize the board
   push {lr}
 
   @--- unlock register
-  ldr     r0, =REGWRPROT
-  ldr     r1, =0x59
-  str     r1, [r0]
-  ldr     r1, =0x16
-  str     r1, [r0]
-  ldr     r1, =0x88
-  str     r1, [r0]
+  @ldr     r0, =REGWRPROT
+  @ldr     r1, =0x59
+  @str     r1, [r0]
+  @ldr     r1, =0x16
+  @str     r1, [r0]
+  @ldr     r1, =0x88
+  @str     r1, [r0]
+  bl      sys_unlock
   
   @--- init POR (TRM, page 55)
   ldr     r1, =0x05AA5
@@ -179,9 +180,10 @@ Board_init: @ Initialize the board
   @str     r0, [r4]
 
   @--- lock register
-  movs    r1, #0
-  ldr     r0, =REGWRPROT
-  str     r1, [r0]
+  @movs    r1, #0
+  @ldr     r0, =REGWRPROT
+  @str     r1, [r0]
+  bl      sys_lock
 
   pop {pc}
 
@@ -189,8 +191,6 @@ Board_init: @ Initialize the board
 Wait_clock: @wait clock to stabilize or timeout
 @ r0 = wait mask
 @ -----------------------------------------------------------------------------
-  push      {lr}
-  
   ldr     r3, =2160000    @ approx. 300ms
   ldr     r1, =CLKSTATUS
 1: subs    r3, r3, #1
@@ -200,4 +200,5 @@ Wait_clock: @wait clock to stabilize or timeout
   ands    r2, r0
   beq     1b
   
-2: pop       {pc}
+2:bx lr
+

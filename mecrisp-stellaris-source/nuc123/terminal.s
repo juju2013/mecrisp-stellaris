@@ -144,7 +144,6 @@ UA_FUN_SEL UARTx_BA+0x30 R/W UART Function Select Register 0x0000_0000
 uart_init:
 @ -----------------------------------------------------------------------------
 
-    push {lr}
 
 @ NUC123 TRM PDF page 343, basic configuration
 @   we've NUC123SD4AN0 here, UART0 tx/rx pins are mapped to PB.1/PB.0 (pin N° 22/21)
@@ -194,16 +193,19 @@ uart_init:
     movs  r0, #0x0
     ldr   r1, =UA_IER
     str   r0, [r1]
+    
+    @--- debug string
+    ldr   r2, =UA_THR
+    movs  r0, #84
+    strb  r0,[r2]
+    movs  r0, #69
+    strb  r0,[r2]
+    movs  r0, #83
+    strb  r0,[r2]
+    movs  r0, #84
+    strb  r0,[r2]
 
-    @--- Enable interrupt
-    movs  r0, #0x013
-    ldr   r1, =UA_IER 
-    str   r0, [r1]
-    ldr   r1, =NVIC_ISER
-    ldr   r0, =UART0_INT
-    str   r0, [r1]
-
-    pop {pc}
+    bx lr
 
 .include "../common/terminalhooks.s"
 
@@ -274,5 +276,7 @@ serial_qkey:  @ ( -- ? ) Is there a key press ?
   mvns    tos, tos @ True Flag
 
 1: pop    {pc}
+
+
 
   .ltorg @ Hier werden viele spezielle Hardwarestellenkonstanten gebraucht, schreibe sie gleich !
