@@ -117,14 +117,6 @@ Board_init: @ Initialize the board
 @ -----------------------------------------------------------------------------
   push {lr}
 
-  @--- unlock register
-  @ldr     r0, =REGWRPROT
-  @ldr     r1, =0x59
-  @str     r1, [r0]
-  @ldr     r1, =0x16
-  @str     r1, [r0]
-  @ldr     r1, =0x88
-  @str     r1, [r0]
   bl      sys_unlock
   
   @--- init POR (TRM, page 55)
@@ -165,24 +157,6 @@ Board_init: @ Initialize the board
   ldr     r1, =BIT16
   str     r1, [r4]
   
-  @--- UART0 clock select: default=use internal 22Mhz
-  @ldr     r4, =CLKSEL1
-  @ldr     r1, =~(BIT25+BIT24)
-  @str     r1, [r4]
-
-  @--- unlock flash
-  @ldr     r4, =CONFIG0
-  @ldr     r0, [r4]
-  @movs    r1, #BIT2
-  @bics    r0, r1   @DFVSEN=0
-  @movs    r1, #(BIT1+BIT0)
-  @orrs    r0, r1     @LOCK=1 (unlocked), DFEN=1 (no data flash)
-  @str     r0, [r4]
-
-  @--- lock register
-  @movs    r1, #0
-  @ldr     r0, =REGWRPROT
-  @str     r1, [r0]
   bl      sys_lock
 
   pop {pc}
