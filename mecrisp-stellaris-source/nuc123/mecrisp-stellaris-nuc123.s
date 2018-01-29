@@ -41,7 +41,7 @@
 @ Constants for the size of the RAM memory
 
 .equ RamAnfang, 0x20000000 @ Start of RAM           Porting: Change this !
-.equ RamEnde,   0x20001000 @ End   of RAM.   20 kb. Porting: Change this !
+.equ RamEnde,   0x20005000 @ End   of RAM.   20 kb. Porting: Change this !
 
 @ Constants for the size and layout of the flash memory
 
