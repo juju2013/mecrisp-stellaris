@@ -55,11 +55,11 @@ h_flashkomma:
   @ Is the desired location in the Flash Dictionary? Outside the Forth core?
   ldr r3, =Kernschutzadresse
   cmp r0, r3
-  blo 9f
+  blo 5f
 
   ldr r3, =FlashDictionaryEnde
   cmp r0, r3
-  bhs 9f
+  bhs 5f
 
 
   @ Prüfe Inhalt. Schreibe nur, wenn es NICHT -1 ist.
@@ -67,20 +67,20 @@ h_flashkomma:
   ldr r3, =0xFFFF
   ands r1, r3  @ High-Halfword der Daten wegmaskieren / Mask away high-halfword of the data
   cmp r1, r3
-  beq 8f @ Fertig ohne zu Schreiben / Done without writing
+  beq 4f @ Fertig ohne zu Schreiben / Done without writing
 
   @ Prüfe die Adresse: Sie muss auf 2 gerade sein:
   @ Check the address: it needs to be straight on 2:
   movs r2, #1
   ands r2, r0
   cmp r2, #0
-  bne 9f
+  bne 5f
 
   @ Ist an der gewünschten Stelle -1 im Speicher ?
   @ Is -1 in memory at the desired location?
   ldrh r2, [r0]
   cmp r2, r3
-  bne 9f
+  bne 5f
 
   @ Okay, alle Proben bestanden. / all samples passed 
 
@@ -97,7 +97,7 @@ h_flashkomma:
   b 2f 
 1: ldr r3, =0xFFFF0000
    orrs r1, r3     
-2: str r1, [r0]
+2: nop
 
   @ Enable write
   push {r0, r1}
@@ -107,17 +107,22 @@ h_flashkomma:
   
   @--- write data
   movs  r2, #ISPCMD_WRITE
+  ldr   r3, =ISPCMD
+  str   r2, [r3]
+  
   ldr   r3, =ISPADR
   str   r0, [r3]
+  
   ldr   r3, =ISPDAT
   str   r1, [r3]
+  
   movs  r0, #0x01
-  ldr   r1, =ISPTRG
-  str   r0, [r1]
+  ldr   r3, =ISPTRG
+  str   r0, [r3]
 
   @--- wait Flash operation finish
   isb  
-3:ldr   r2, [r1]
+3:ldr   r2, [r3]
   ands  r0, r0, r2
   bne   3b
   
@@ -125,8 +130,8 @@ h_flashkomma:
   bl  fmc_disable
   bl  sys_lock
 
-8:pop {pc}
-9:Fehler_Quit "Wrong address or data for writing flash !"
+4:pop {pc}
+5:Fehler_Quit "Wrong address or data for writing flash !"
 
 
 @ -----------------------------------------------------------------------------
