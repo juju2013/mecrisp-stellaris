@@ -39,12 +39,14 @@
     .equ ISPCMD_READ    ,0
     .equ ISPCMD_COMID   ,0x0b   @ Company ID
     .equ ISPCMD_UID     ,0x04   @ UNIQ ID    
-    .equ ISPCMD_VMAP    ,0x2e   @ Vector map    
+    .equ ISPCMD_VMAP    ,0x2e   @ Vector map
+    
+    .equ PAGE_ADR_MASK  ,~(512+511)  @bitmask for page addressc
 
 @ -----------------------------------------------------------------------------
   Wortbirne Flag_visible, "hflash!" @ ( x Addr -- )
   @ Schreibt an die auf 2 gerade Adresse in den Flash.
-  @ Write to the 2 straight address in the flash.
+  @ Write a halfword to the flash.
 h_flashkomma:
 @ -----------------------------------------------------------------------------
   push {lr}
@@ -70,14 +72,14 @@ h_flashkomma:
   beq 4f @ Fertig ohne zu Schreiben / Done without writing
 
   @ Prüfe die Adresse: Sie muss auf 2 gerade sein:
-  @ Check the address: it needs to be straight on 2:
+  @ Check the address: it needs to be divisible by 2:
   movs r2, #1
   ands r2, r0
   cmp r2, #0
   bne 5f
 
   @ Ist an der gewünschten Stelle -1 im Speicher ?
-  @ Is -1 in memory at the desired location?
+  @ Is 0xffff in memory at the desired location?
   ldrh r2, [r0]
   cmp r2, r3
   bne 5f
@@ -135,40 +137,76 @@ h_flashkomma:
 
 
 @ -----------------------------------------------------------------------------
-  Wortbirne Flag_visible, "flashpageerase" @ ( Addr -- )
-  @ Löscht einen 1kb großen Flashblock  Deletes one 1kb Flash page
+  Wortbirne Flag_visible, "flashpageerase" @ ( Addr -- ) any address, will start at 512 boundery
+  @ Deletes a 512 bytes Flash page
 flashpageerase:
 @ -----------------------------------------------------------------------------
-  push {r0, r1, r2, r3, lr}
-  popda r0 @ Adresse zum Löschen holen Fetch address to erase.
+  push    {lr}
+  popda   r0 @ Adresse of page to erase
 
+  @--- align to page
+  ldr     r1, =PAGE_ADR_MASK
+  ands    r0, r0, r1
+  
+  @ Enable write
+  push {r0, r1}
+  bl  sys_unlock
+  bl  fmc_enable
+  pop {r0, r1}
 
-2:pop {r0, r1, r2, r3, pc}
+  @--- erase flash
+  movs  r2, #ISPCMD_ERASE
+  ldr   r3, =ISPCMD
+  str   r2, [r3]
+  
+  ldr   r3, =ISPADR
+  str   r0, [r3]
+  
+  movs  r0, #0x01
+  ldr   r3, =ISPTRG
+  str   r0, [r3]
+
+  @--- wait Flash operation finish
+  isb  
+1:ldr   r2, [r3]
+  ands  r0, r0, r2
+  bne   1b
+  
+  @ Lock Flash after finishing this
+  bl  fmc_disable
+  bl  sys_lock
+
+2:pop {pc}
 
 @ -----------------------------------------------------------------------------
   Wortbirne Flag_visible, "eraseflash" @ ( -- )
   @ Löscht den gesamten Inhalt des Flashdictionaries.
+  @ Clears the entire contents of the Flash dictionary.
 @ -----------------------------------------------------------------------------
-        ldr r0, =FlashDictionaryAnfang
+  ldr r0,   =FlashDictionaryAnfang
 eraseflash_intern:
-  cpsid i
-        ldr r1, =FlashDictionaryEnde
-        ldr r2, =0xFFFF
+  cpsid     i
+  ldr       r1, =FlashDictionaryEnde
+  ldr       r2, =0xFFFF
 
-1:      ldrh r3, [r0]
-        cmp r3, r2
-        beq 2f
-          pushda r0
-            dup
-            write "Erase block at  "
-            bl hexdot
-            writeln " from Flash"
-          bl flashpageerase
-2:      adds r0, #2
-        cmp r0, r1
-        bne 1b
-  writeln "Finished. Reset !"
-  bl Restart
+1:ldrh      r3, [r0]
+  cmp       r3, r2
+  beq       2f
+  pushda    r0
+  dup
+  write     "Erase block at  "
+  bl        hexdot
+  writeln   " from Flash"
+  push      {r0, r1, r2, r3}
+  bl        flashpageerase
+  pop       {r0, r1, r2, r3}
+2:movs      r2, #0b01
+  lsls      r2, r2, #9
+  adds      r0, r0, r2
+  cmp       r0, r1
+  bne       1b
+  writeln   "Finished. Reset !"
+  bl        Restart
 
 @ -----------------------------------------------------------------------------
   Wortbirne Flag_visible, "eraseflashfrom" @ ( Addr -- )
