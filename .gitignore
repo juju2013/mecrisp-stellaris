@@ -7,3 +7,6 @@
 *-linux
 .gdbinit
 *.ini
+.*
+debug
+*-ra
