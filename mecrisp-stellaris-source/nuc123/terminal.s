@@ -150,18 +150,50 @@ uart_init:
 
 
 @ NUC123 TRM PDF page 343, basic configuration
-@   we've NUC123SD4AN0 here, UART0 tx/rx pins are mapped to PB.1/PB.0 (pin N° 22/21)
 
-    @--- RE: main.c:46
+    @--- Set default TX/RX pin
     movs  r0, #0
     ldr   r1, =GPB_MFP
     str   r0, [r1]
-    movs  r0, #3
+    movs  r0, #3    @ PB1/0 = TX/RX
     str   r0, [r1]
     movs  r0, #0x0f
     ldr   r1, =GPF_MFP
     str   r0, [r1]
     
+
+    @--- Set Tx/Rx pin:
+    @ --- test package type
+    ldr   r1, =PDID
+    ldr   r0, [r1]
+    ldr   r1, =(BIT6+BIT5+BIT4) @ TRM page 47: 5,4: 33pin 3,2: 48pin 0,1:64pin
+    ands  r0, r0, r1
+    cmp   r0, #0x30
+    bgt   33f
+    cmp   r0, #0x10
+    bgt   48f
+
+64: @ --- for 64pin package: PB1/PB0 GPB_MFPL[6:4]=b001, GPB_MFPL[2:0]=b001
+		ldr		r1, =GPB_MFP               
+		ldr		r0, [r1]
+    movs  r3, #0b011
+    orrs  r0, r0, r3
+    str   r0, [r1]
+    b     33f
+
+48: @ --- for 48pin package: PC4/PC5, using ALT
+    movs  r0, #0
+    ldr   r1, =GPB_MFP  
+    str   r0, [r1]
+    ldr   r0, =(BIT30+BIT29)
+    ldr   r1, =ALT_MFP
+    str   r0, [r1]
+    movs  r0, #0x30
+    ldr   r1, =GPC_MFP
+    str   r0, [r1]
+    
+33: @ -- 33pin has no UART0, nop
+
     @--- reset UART module
     ldr   r1, =IPRSTC2
     ldr   r0, =BIT16
@@ -169,12 +201,6 @@ uart_init:
     movs  r0, #0
     str   r0, [r1]
 
-    @--- Set Tx/Rx pin: GPB_MFPL[6:4]=b001, GPB_MFPL[2:0]=b001
-		ldr		r1, =GPB_MFP               
-		ldr		r0, [r1]
-    movs  r3, #0b011
-    orrs  r0, r0, r3
-    str   r0, [r1]
     
     @--- Use URAT mode: UA_FUN_SEL[1:0]=0b00
     ldr   r1, =UA_FUN_SEL             
@@ -198,7 +224,7 @@ uart_init:
     ldr   r1, =UA_IER
     str   r0, [r1]
     
-    @--- debug string
+    @--- debug string "test"
     ldr   r2, =UA_THR
     movs  r0, #84
     strb  r0,[r2]
