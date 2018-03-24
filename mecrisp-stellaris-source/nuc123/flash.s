@@ -1,6 +1,7 @@
 @
 @    Mecrisp-Stellaris - A native code Forth implementation for ARM-Cortex M microcontrollers
 @    Copyright (C) 2013  Matthias Koch
+@    Copyright (C) 2017,2018  juju2013@github
 @
 @    This program is free software: you can redistribute it and/or modify
 @    it under the terms of the GNU General Public License as published by
@@ -217,7 +218,7 @@ eraseflash_intern:
 
 @ -----------------------------------------------------------------------------
   Wortbirne Flag_visible, "sys-unlock" @ ( -- )
-sys_unlock:  @ ( --  ) allow write to sys write protected registers
+sys_unlock:  @ ( --  ) allow write to protected registers
 @ -----------------------------------------------------------------------------
     @--- unlock register
     ldr     r0, =REGWRPROT
@@ -263,25 +264,3 @@ fmc_disable:  @ ( --  ) disable Flash Memory Controler operations
     str     r0, [r1]
 
     bx      lr
-    
-@ -----------------------------------------------------------------------------
-  Wortbirne Flag_visible, "fmc-read" @ ( -- )
-fmc_read:  @ ( --  ) read any valide flash address
-@ -----------------------------------------------------------------------------
-
-    bx lr
-
-@ -----------------------------------------------------------------------------
-  Wortbirne Flag_visible, "fmc-write" @ ( -- )
-fmc_write:  @ ( --  ) write any valide flash address
-@ -----------------------------------------------------------------------------
-
-    bx lr
-
-@ -----------------------------------------------------------------------------
-  Wortbirne Flag_visible, "fmc-erase" @ ( -- )
-fmc_erase:  @ ( --  ) erase a flash page
-@ -----------------------------------------------------------------------------
-
-    bx lr
-

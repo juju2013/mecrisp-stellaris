@@ -1,7 +1,8 @@
 @
 @    Mecrisp-Stellaris - A native code Forth implementation for ARM-Cortex M microcontrollers
 @    Copyright (C) 2013  Matthias Koch
-@
+@@    Copyright (C) 2017,2018  juju2013@github
+
 @    This program is free software: you can redistribute it and/or modify
 @    it under the terms of the GNU General Public License as published by
 @    the Free Software Foundation, either version 3 of the License, or
@@ -99,14 +100,7 @@ Nuc123_init:
     .include "../common/catchflashpointers.s"
 
     welcome " with M0 core by Matthias Koch"
-    writeln " _____              _             "
-    writeln "|_   _|            | |            "
-    writeln "  | |_ __ __ _  ___| | _____ _ __ "
-    writeln "  | | '__/ _` |/ __| |/ / _ \\ '__|"
-    writeln "  | | | | (_| | (__|   <  __/ |   "
-    writeln "  \\_/_|  \\__,_|\\___|_|\\_\\___|_|   "
-    writeln ""
-    writeln "Modified for NUC123 by juju2013"
+    writeln "  modified for NUC123 by juju2013"
     writeln ""
 
     @ Ready to fly ! 

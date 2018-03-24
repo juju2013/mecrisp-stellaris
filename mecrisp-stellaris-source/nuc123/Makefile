@@ -2,8 +2,8 @@
 ARMGNU?=arm-none-eabi
 
 # debug build
-COPS = -Wall  -Os -nostdlib -nostartfiles -ffreestanding -save-temps -fno-schedule-insns -fno-schedule-insns2 -fno-omit-frame-pointer -funwind-tables  -mapcs -mno-sched-prolog
-AOPS = --warn --fatal-warnings -g 
+COPS = -Wall  -Os -nostdlib -nostartfiles -ffreestanding -save-temps
+AOPS = --warn --fatal-warnings
 
 all : mecrisp-stellaris-nuc123.bin 
 

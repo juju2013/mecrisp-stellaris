@@ -1,7 +1,8 @@
 @
 @    Mecrisp-Stellaris - A native code Forth implementation for ARM-Cortex M microcontrollers
 @    Copyright (C) 2013  Matthias Koch
-@
+@@    Copyright (C) 2017,2018  juju2013@github
+
 @    This program is free software: you can redistribute it and/or modify
 @    it under the terms of the GNU General Public License as published by
 @    the Free Software Foundation, either version 3 of the License, or
@@ -22,9 +23,7 @@
 
 
 /*
-NUC123 TRM PDF, 
-
-Page 45: System Manager Control Registers
+NUC123 TRM PDF, Page 45 System Manager Control Registers
 GCR Base Address:
 GCR_BA = 0x5000_0000
 PDID GCR_BA+0x00 R Part Device Identification Number Register 0x1001_23XX [1]
@@ -44,8 +43,13 @@ GPA_IOCR GCR_BA+0xC0 R/W GPIOA I/O Control Register 0x0000_0000
 GPB_IOCR GCR_BA+0xC4 R/W GPIOB I/O Control Register 0x0000_0000
 GPD_IOCR GCR_BA+0xCC R/W GPIOD I/O Control Register 0x0000_0000
 REGWRPROT GCR_BA+0x100 R/W Register Write-Protection Control Register 0x0000_0000
-GPA_MFPH GCR_BA+0x134 R/W GPB_MFPL GCR_BA+0x138 R/W GPB_MFPH GCR_BA+0x13C R/W GPC_MFPL GCR_BA+0x140 R/W GPC_MFPH GCR_BA+0x144 R/W GPD_MFPL GCR_BA+0x148 R/W GPD_MFPH GCR_BA+0x14C R/W
-May. 25, 2016
+GPA_MFPH GCR_BA+0x134 R/W 
+GPB_MFPL GCR_BA+0x138 R/W 
+GPB_MFPH GCR_BA+0x13C R/W 
+GPC_MFPL GCR_BA+0x140 R/W 
+GPC_MFPH GCR_BA+0x144 R/W 
+GPD_MFPL GCR_BA+0x148 R/W 
+GPD_MFPH GCR_BA+0x14C R/W
 GPIOA Multiple Function High Byte Control Register
 (NUC123xxxAEx Only)
 GPIOB Multiple Function Low Byte Control Register

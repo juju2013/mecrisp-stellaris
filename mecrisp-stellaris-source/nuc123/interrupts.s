@@ -1,6 +1,7 @@
 @
 @    Mecrisp-Stellaris - A native code Forth implementation for ARM-Cortex M microcontrollers
 @    Copyright (C) 2013  Matthias Koch
+@    Copyright (C) 2017,2018  juju2013@github
 @
 @    This program is free software: you can redistribute it and/or modify
 @    it under the terms of the GNU General Public License as published by
