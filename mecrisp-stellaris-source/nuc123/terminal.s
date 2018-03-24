@@ -224,17 +224,6 @@ uart_init:
     ldr   r1, =UA_IER
     str   r0, [r1]
     
-    @--- debug string "test"
-    ldr   r2, =UA_THR
-    movs  r0, #84
-    strb  r0,[r2]
-    movs  r0, #69
-    strb  r0,[r2]
-    movs  r0, #83
-    strb  r0,[r2]
-    movs  r0, #84
-    strb  r0,[r2]
-
     bx lr
 
 .include "../common/terminalhooks.s"
