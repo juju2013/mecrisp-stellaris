@@ -42,7 +42,7 @@
     .equ ISPCMD_UID     ,0x04   @ UNIQ ID    
     .equ ISPCMD_VMAP    ,0x2e   @ Vector map
     
-    .equ PAGE_ADR_MASK  ,~(512+511)  @bitmask for page addressc
+    .equ PAGE_ADR_MASK  ,~(512-1)  @bitmask for page addressc
 
 @ -----------------------------------------------------------------------------
   Wortbirne Flag_visible, "hflash!" @ ( x Addr -- )
@@ -188,9 +188,9 @@ flashpageerase:
 eraseflash_intern:
   cpsid     i
   ldr       r1, =FlashDictionaryEnde
-  ldr       r2, =0xFFFF
 
-1:ldrh      r3, [r0]
+1:ldr       r2, =0xFFFF
+  ldrh      r3, [r0]
   cmp       r3, r2
   beq       2f
   pushda    r0
