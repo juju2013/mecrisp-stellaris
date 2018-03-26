@@ -40,7 +40,7 @@ decimal
 : pb4-init ( -- )
   15 bit ALT_MFP bic!
   4 bit GPB_MFP bic! \ enable pin
-  PMODE-PP 4 dup + lshift GPIOB_PMD \ set pin output mode
+  PMODE-PP 4 dup + lshift GPIOB_PMD ! \ set pin output mode
 ;
 
 : ledon ( -- )
