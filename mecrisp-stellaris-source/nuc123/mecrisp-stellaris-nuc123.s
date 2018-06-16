@@ -1,7 +1,8 @@
 @
 @    Mecrisp-Stellaris - A native code Forth implementation for ARM-Cortex M microcontrollers
 @    Copyright (C) 2013  Matthias Koch
-@
+@@    Copyright (C) 2017,2018  juju2013@github
+
 @    This program is free software: you can redistribute it and/or modify
 @    it under the terms of the GNU General Public License as published by
 @    the Free Software Foundation, either version 3 of the License, or
@@ -45,7 +46,7 @@
 
 @ Constants for the size and layout of the flash memory
 
-.equ Kernschutzadresse,     0x00000000 @ Darunter wird niemals etwas geschrieben ! Mecrisp core never writes flash below this address.
+.equ Kernschutzadresse,     0x00004000 @ Darunter wird niemals etwas geschrieben ! Mecrisp core never writes flash below this address.
 .equ FlashDictionaryAnfang, 0x00004000 @ 16 kb für den Kern reserviert...           16 kb Flash reserved for core.
 .equ FlashDictionaryEnde,   0x00010000 @ 64 kb Platz für das Flash-Dictionary       64 kb Flash available. Porting: Change this
 .equ Backlinkgrenze,        RamAnfang  @ Ab dem Ram-Start.
@@ -99,14 +100,7 @@ Nuc123_init:
     .include "../common/catchflashpointers.s"
 
     welcome " with M0 core by Matthias Koch"
-    writeln " _____              _             "
-    writeln "|_   _|            | |            "
-    writeln "  | |_ __ __ _  ___| | _____ _ __ "
-    writeln "  | | '__/ _` |/ __| |/ / _ \\ '__|"
-    writeln "  | | | | (_| | (__|   <  __/ |   "
-    writeln "  \\_/_|  \\__,_|\\___|_|\\_\\___|_|   "
-    writeln ""
-    writeln "Modified for NUC123 by juju2013"
+    writeln "  modified for NUC123 by juju2013"
     writeln ""
 
     @ Ready to fly ! 
@@ -117,14 +111,7 @@ Board_init: @ Initialize the board
 @ -----------------------------------------------------------------------------
   push {lr}
 
-  @--- unlock register
-  ldr     r0, =REGWRPROT
-  ldr     r1, =0x59
-  str     r1, [r0]
-  ldr     r1, =0x16
-  str     r1, [r0]
-  ldr     r1, =0x88
-  str     r1, [r0]
+  bl      sys_unlock
   
   @--- init POR (TRM, page 55)
   ldr     r1, =0x05AA5
@@ -164,24 +151,7 @@ Board_init: @ Initialize the board
   ldr     r1, =BIT16
   str     r1, [r4]
   
-  @--- UART0 clock select: default=use internal 22Mhz
-  @ldr     r4, =CLKSEL1
-  @ldr     r1, =~(BIT25+BIT24)
-  @str     r1, [r4]
-
-  @--- unlock flash
-  @ldr     r4, =CONFIG0
-  @ldr     r0, [r4]
-  @movs    r1, #BIT2
-  @bics    r0, r1   @DFVSEN=0
-  @movs    r1, #(BIT1+BIT0)
-  @orrs    r0, r1     @LOCK=1 (unlocked), DFEN=1 (no data flash)
-  @str     r0, [r4]
-
-  @--- lock register
-  movs    r1, #0
-  ldr     r0, =REGWRPROT
-  str     r1, [r0]
+  bl      sys_lock
 
   pop {pc}
 
@@ -189,8 +159,6 @@ Board_init: @ Initialize the board
 Wait_clock: @wait clock to stabilize or timeout
 @ r0 = wait mask
 @ -----------------------------------------------------------------------------
-  push      {lr}
-  
   ldr     r3, =2160000    @ approx. 300ms
   ldr     r1, =CLKSTATUS
 1: subs    r3, r3, #1
@@ -200,4 +168,5 @@ Wait_clock: @wait clock to stabilize or timeout
   ands    r2, r0
   beq     1b
   
-2: pop       {pc}
+2:bx lr
+
