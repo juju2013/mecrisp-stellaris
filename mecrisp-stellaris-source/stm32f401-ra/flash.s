@@ -22,7 +22,7 @@
 @ so ist es diesmal ganz komfortabel. Leider gibt es nur weniger große
 @ Sektoren, die getrennt gelöscht werden können.
 
-@ Write and Erase Flash in STM32F4.
+@ Write and Erase Flash in STM32F401.
 @ Porting: Rewrite this ! You need hflash! and - as far as possible - cflash!
 
 .equ FLASH_Base, 0x40023C00
@@ -69,7 +69,7 @@ h_flashkomma:
   cmp r2, r3
   bne 3f
 
-  @ Okay, alle Proben bestanden.
+  @ Okay, alle Proben bestanden. 
 
   @ Im STM32F4 ist der Flash-Speicher gespiegelt, die wirkliche Adresse liegt weiter hinten !
   adds r0, #0x08000000
@@ -137,7 +137,7 @@ c_flashkomma:
   cmp r2, #0xFF
   bne 3b
 
-  @ Okay, alle Proben bestanden.
+  @ Okay, alle Proben bestanden. 
 
   @ Im STM32F4 ist der Flash-Speicher gespiegelt, die wirkliche Adresse liegt weiter hinten !
   adds r0, #0x08000000
@@ -181,7 +181,7 @@ eraseflashsector:  @ Löscht einen Flash-Sektor
 
   cmp tos, #2   @ Nicht den Kern in den Sektoren 0 und 1 löschen
   blo 2f
-  cmp tos, #12  @ Es gibt nur 12 Sektoren
+  cmp tos, #8   @ Es gibt nur 8 Sektoren
   bhs 2f
 
   ldr r2, =FLASH_KEYR
@@ -233,7 +233,6 @@ eraseflashsector:  @ Löscht einen Flash-Sektor
 3:@ Diesen Sektor fertig durchkämmt
 .endm
 
-  @ Agenda: SRAM-Block 2 aktivieren ? Löschen des RAMs zu Beginn scheitert komischerweise.
 @ -----------------------------------------------------------------------------
   Wortbirne Flag_visible, "eraseflash" @ ( -- )
   @ Löscht den gesamten Inhalt des Flashdictionaries.
@@ -258,10 +257,6 @@ eraseflashsector:  @ Löscht einen Flash-Sektor
   loeschpruefung  0x08020000  0x0803FFFF  5
   loeschpruefung  0x08040000  0x0805FFFF  6
   loeschpruefung  0x08060000  0x0807FFFF  7
-  loeschpruefung  0x08080000  0x0809FFFF  8
-  loeschpruefung  0x080A0000  0x080BFFFF  9
-  loeschpruefung  0x080C0000  0x080DFFFF  10
-  loeschpruefung  0x080E0000  0x080FFFFF  11
 
   writeln "Finished. Reset !"
 

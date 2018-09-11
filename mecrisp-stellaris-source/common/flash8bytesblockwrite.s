@@ -16,8 +16,8 @@
 @    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 @
 
-@ Emulation for hflash! to circumvent problems with 16-Byte-ECC Flash
-@ 16-Bit Flash writes are collected here to be written later as 16 Byte blocks
+@ Emulation for hflash! to circumvent problems with 8-Byte-ECC Flash
+@ 16-Bit Flash writes are collected here to be written later as 8 Byte blocks
 
 @ Einfügen im Hauptteil:  
 @ .equ Sammelstellen, 32 @ 32 * (8 + 4) = 384 Bytes
@@ -29,7 +29,7 @@ initflash: @ ( -- ) Löscht alle Einträge in der Sammeldatei
                      @ Clear the table at the beginning and in quit
 @ -----------------------------------------------------------------------------
   ldr r0, =Sammeltabelle
-  ldr r1, =20 * Sammelstellen
+  ldr r1, =12 * Sammelstellen
   movs r2, #0
 
 1:strb r2, [r0]
@@ -68,20 +68,12 @@ sammeltabellemalen: @ ( -- ) Malt den Inhalt der Sammeltabelle
   pushdatos
   ldr tos, [r0, #8]
   bl hexdot
-
-  pushdatos
-  ldr tos, [r0, #12]
-  bl hexdot
-
-  pushdatos
-  ldr tos, [r0, #16]
-  bl hexdot
   
   push {r0, r1}
   writeln " >"
   pop {r0, r1} 
 
-  adds r0, #20
+  adds r0, #12
   subs r1, #1
   bne 1b
 
@@ -122,23 +114,23 @@ h_flashkomma: @ ( x addr -- ) Fügt einen Eintrag in die Tabelle ein und brennt 
   Fehler_Quit "Cannot write into core !"
 2:
 
-  @ Suche nach einem Eintrag, der die Adresse ohne $F trägt !
-  @ Search if the 16-Byte truncated address is already buffered in the table !
+  @ Suche nach einem Eintrag, der die Adresse ohne $7 trägt !
+  @ Search if the 8-Byte truncated address is already buffered in the table !
 
-  lsrs r3, r2, #4 @ Prepare address for crawling by removing low bits
+  lsrs r3, r2, #3 @ Prepare address for crawling by removing low bits
 
   ldr r0, =Sammeltabelle
   movs r1, #Sammelstellen
 
 2:ldr r4, [r0]
-  lsrs r4, #4 @ Prepare address by removing low bits
+  lsrs r4, #3 @ Prepare address by removing low bits
 
   cmp r4, r3 @ Ist das passende Päärchen gefunden ?
   beq.n hflashstoreemulation_gefunden @ Found the pair ?
 
   @ Ansonsten weitersuchen:
   @ Continue searching the table
-  adds r0, #20
+  adds r0, #12
   subs r1, #1
   bne 2b
 
@@ -155,7 +147,7 @@ h_flashkomma: @ ( x addr -- ) Fügt einen Eintrag in die Tabelle ein und brennt 
 
   @ Ansonsten weitersuchen:
   @ Continue searching the table
-  adds r0, #20
+  adds r0, #12
   subs r1, #1
   bne 3b
 
@@ -167,14 +159,12 @@ hflashstoreemulation_leerestelle:
   @ r0 is pointer into an empty table place to fill in now:
 
   @ Set table entry properly
-  lsls r3, #4  @ Address has just been shifted right before
+  lsls r3, #3  @ Address has just been shifted right before
   str r3, [r0] @ Address of new block
 
   subs r1, r1, #1 @ Prepare constant -1
   str r1, [r0, #4]
   str r1, [r0, #8]
-  str r1, [r0, #12]
-  str r1, [r0, #16]
 
 hflashstoreemulation_gefunden: @ Found !
 @  writeln "Einfügen"
@@ -184,7 +174,7 @@ hflashstoreemulation_gefunden: @ Found !
 
   @ Insert the new entry into the table
   @ Prepare low bits of address as offset into table:
-  movs r1, #15
+  movs r1, #7
   ands r1, r2
   adds r1, #4 @ So skip table entry header
   strh tos, [r0, r1]  @ Store desired value into table
@@ -195,19 +185,19 @@ hflashstoreemulation_gefunden: @ Found !
   adds r1, #1  @ Increment count of writes
   str r1, [r0] @ Store new count
 
-  @ Enough writes to fill a 16 byte block ?
-  movs r2, #15
+  @ Enough writes to fill a 8 byte block ?
+  movs r2, #7
   ands r1, r2
 
 @  pushda r1
 @  bl hexdot  
 
-  cmp r1, #8 @ Is this the eigth write to this table ?
+  cmp r1, #4 @ Is this the fourth write to this table ?
   bne.n hflashstoreemulation_fertig
 
-    @ A 16 Byte block is finished ! Let's write !
+    @ A 8 Byte block is finished ! Let's write !
     bl flushblock
-    bl hexflashstore
+    bl eightflashstore
 
 hflashstoreemulation_fertig:
   pop {r4, r5, pc}
@@ -226,9 +216,9 @@ flushflash:
   cmp r2, #0
   beq 3f
     bl flushblock
-    bl hexflashstore
+    bl eightflashstore
 
-3:adds r0, #20
+3:adds r0, #12
   subs r1, #1
   bne 2b
 
@@ -241,13 +231,9 @@ flushblock: @ Put a table entry which address is in r0 on data stack for later 1
   ldr tos, [r0, #4]
   pushdatos
   ldr tos, [r0, #8]
-  pushdatos
-  ldr tos, [r0, #12]
-  pushdatos
-  ldr tos, [r0, #16]
 
   pushdatos             @ Place address on stack
-  movs tos, #15
+  movs tos, #7
   mvns tos, tos
   ldr r2, [r0] @ Load the address of the table entry
   ands tos, r2 @ Cut off the lowest four bits that contain the write count
