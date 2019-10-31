@@ -11,7 +11,7 @@ mecrisp-stellaris-nrf52832.o : mecrisp-stellaris-nrf52832.s
 
 mecrisp-stellaris-nrf52832.bin : memmap mecrisp-stellaris-nrf52832.o
 	$(ARMGNU)-ld -o mecrisp-stellaris-nrf52832.elf -T memmap mecrisp-stellaris-nrf52832.o
-	$(ARMGNU)-objdump -DS mecrisp-stellaris-nrf52832.elf > mecrisp-stellaris-nrf52832.list
+	$(ARMGNU)-objdump -D mecrisp-stellaris-nrf52832.elf > mecrisp-stellaris-nrf52832.list
 	$(ARMGNU)-objcopy mecrisp-stellaris-nrf52832.elf mecrisp-stellaris-nrf52832.bin -O binary
 	$(ARMGNU)-objcopy mecrisp-stellaris-nrf52832.elf mecrisp-stellaris-nrf52832.hex -O ihex
 
