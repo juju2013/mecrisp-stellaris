@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--STM32F103xx svdcutter template.xml creator for Mecrisp-Stellaris Forth by Matthias Koch -->
+<!--By Terry Porter "terry@tjporter.com.au"-->
+<!-- NOTE: Mecrisp Stellaris enables IO PORTS A-E by default, for all other peripherals Register RCC is required-->
+
+
+<peripherals>
+  <name xmlns:xs="http://www.w3.org/2001/XMLSchema-instance">FSMC</name>
+  <name xmlns:xs="http://www.w3.org/2001/XMLSchema-instance">PWR</name>
+  <name xmlns:xs="http://www.w3.org/2001/XMLSchema-instance">RCC</name>
+  <name xmlns:xs="http://www.w3.org/2001/XMLSchema-instance">GPIOA</name>
+  <name xmlns:xs="http://www.w3.org/2001/XMLSchema-instance">GPIOB</name>
+  <name xmlns:xs="http://www.w3.org/2001/XMLSchema-instance">GPIOC</name>
+  <name xmlns:xs="http://www.w3.org/2001/XMLSchema-instance">GPIOD</name>
+  <name xmlns:xs="http://www.w3.org/2001/XMLSchema-instance">GPIOE</name>
+  <name xmlns:xs="http://www.w3.org/2001/XMLSchema-instance">GPIOF</name>
+  <name xmlns:xs="http://www.w3.org/2001/XMLSchema-instance">GPIOG</name>
+  <name xmlns:xs="http://www.w3.org/2001/XMLSchema-instance">AFIO</name>
+  <name xmlns:xs="http://www.w3.org/2001/XMLSchema-instance">EXTI</name>
+  <name xmlns:xs="http://www.w3.org/2001/XMLSchema-instance">DMA1</name>
+  <name xmlns:xs="http://www.w3.org/2001/XMLSchema-instance">DMA2</name>
+  <name xmlns:xs="http://www.w3.org/2001/XMLSchema-instance">SDIO</name>
+  <name xmlns:xs="http://www.w3.org/2001/XMLSchema-instance">RTC</name>
+  <name xmlns:xs="http://www.w3.org/2001/XMLSchema-instance">BKP</name>
+  <name xmlns:xs="http://www.w3.org/2001/XMLSchema-instance">IWDG</name>
+  <name xmlns:xs="http://www.w3.org/2001/XMLSchema-instance">WWDG</name>
+  <name xmlns:xs="http://www.w3.org/2001/XMLSchema-instance">TIM1</name>
+  <name xmlns:xs="http://www.w3.org/2001/XMLSchema-instance">TIM8</name>
+  <name xmlns:xs="http://www.w3.org/2001/XMLSchema-instance">TIM2</name>
+  <name xmlns:xs="http://www.w3.org/2001/XMLSchema-instance">TIM3</name>
+  <name xmlns:xs="http://www.w3.org/2001/XMLSchema-instance">TIM4</name>
+  <name xmlns:xs="http://www.w3.org/2001/XMLSchema-instance">TIM5</name>
+  <name xmlns:xs="http://www.w3.org/2001/XMLSchema-instance">TIM9</name>
+  <name xmlns:xs="http://www.w3.org/2001/XMLSchema-instance">TIM12</name>
+  <name xmlns:xs="http://www.w3.org/2001/XMLSchema-instance">TIM10</name>
+  <name xmlns:xs="http://www.w3.org/2001/XMLSchema-instance">TIM11</name>
+  <name xmlns:xs="http://www.w3.org/2001/XMLSchema-instance">TIM13</name>
+  <name xmlns:xs="http://www.w3.org/2001/XMLSchema-instance">TIM14</name>
+  <name xmlns:xs="http://www.w3.org/2001/XMLSchema-instance">TIM6</name>
+  <name xmlns:xs="http://www.w3.org/2001/XMLSchema-instance">TIM7</name>
+  <name xmlns:xs="http://www.w3.org/2001/XMLSchema-instance">I2C1</name>
+  <name xmlns:xs="http://www.w3.org/2001/XMLSchema-instance">I2C2</name>
+  <name xmlns:xs="http://www.w3.org/2001/XMLSchema-instance">SPI1</name>
+  <name xmlns:xs="http://www.w3.org/2001/XMLSchema-instance">SPI2</name>
+  <name xmlns:xs="http://www.w3.org/2001/XMLSchema-instance">SPI3</name>
+  <name xmlns:xs="http://www.w3.org/2001/XMLSchema-instance">USART1</name>
+  <name xmlns:xs="http://www.w3.org/2001/XMLSchema-instance">USART2</name>
+  <name xmlns:xs="http://www.w3.org/2001/XMLSchema-instance">USART3</name>
+  <name xmlns:xs="http://www.w3.org/2001/XMLSchema-instance">ADC1</name>
+  <name xmlns:xs="http://www.w3.org/2001/XMLSchema-instance">ADC2</name>
+  <name xmlns:xs="http://www.w3.org/2001/XMLSchema-instance">ADC3</name>
+  <name xmlns:xs="http://www.w3.org/2001/XMLSchema-instance">CAN</name>
+  <name xmlns:xs="http://www.w3.org/2001/XMLSchema-instance">DAC</name>
+  <name xmlns:xs="http://www.w3.org/2001/XMLSchema-instance">DBG</name>
+  <name xmlns:xs="http://www.w3.org/2001/XMLSchema-instance">UART4</name>
+  <name xmlns:xs="http://www.w3.org/2001/XMLSchema-instance">UART5</name>
+  <name xmlns:xs="http://www.w3.org/2001/XMLSchema-instance">CRC</name>
+  <name xmlns:xs="http://www.w3.org/2001/XMLSchema-instance">FLASH</name>
+  <name xmlns:xs="http://www.w3.org/2001/XMLSchema-instance">NVIC</name>
+  <name xmlns:xs="http://www.w3.org/2001/XMLSchema-instance">USB</name>
+</peripherals>  
+
