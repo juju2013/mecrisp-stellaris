@@ -2,7 +2,7 @@
 # By Terry Porter terry@tjporter.com.au
 
 PROJECT_NAME		= svd2forth-v3-stm32
-FOLDED_SVD		= STM32L07x.svd
+FOLDED_SVD		= STM32F103xx.svd
 CLEANED_SVD		= $(FOLDED_SVD)-cleaned.svd
 UNFOLDED_SVD 		= $(CLEANED_SVD).uf.svd
 PROCESSOR 		= xsltproc
@@ -10,6 +10,7 @@ EDITOR			= gvim -geometry 90x60+150+150
 FOLDED_SRC    		= $(FOLDED_SVD)
 UNFOLDER_STY		= svduf.xsl
 TEMPLATE_STY		= mk.template.xsl
+TEMPALTE_CUT    = template_cutter.xml
 SVDCUTTER_STY		= svdcutter.xsl  	# template.xml is hardcoded here
 BITFIELDS_STY		= bitfields.xsl  	# template.xml is hardcoded here
 EQUATES_STY		= svd2gas-equates.xsl   # template.xml is hardcoded here
@@ -42,7 +43,7 @@ help:
 
 everything: template mem mk.equates
 
-mem: mk.memmap mk.bitfields 
+mem: mk.memmap mk.bitfields peripheral
 
 template: mk.template
 	
@@ -67,6 +68,9 @@ mk.template: unfold
 mk.equates: $(TEMPLATE) $(UNFOLDED_SVD) $(EQUATES_STY)
 	$(PROCESSOR) -o $(EQUATES) $(EQUATES_STY) $(UNFOLDED_SVD)	
 
+peripheral: template
+	./mkperipherals.sh
+  
 unfold: svdclean
 	$(PROCESSOR) -o $(UNFOLDED_SVD) $(UNFOLDER_STY) $(CLEANED_SVD)
 	@echo
@@ -82,7 +86,7 @@ release:
 .PHONY: clean
 	
 clean:	
-	rm $(MEMMAP) $(BITFIELDS) $(TEMPLATE) $(UNFOLDED_SVD) $(CLEANED_SVD) .*.swp 
+	rm $(MEMMAP) $(BITFIELDS) $(TEMPLATE) $(UNFOLDED_SVD) $(CLEANED_SVD) .*.swp peripherals/*
 
 
 

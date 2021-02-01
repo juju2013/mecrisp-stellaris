@@ -10,7 +10,6 @@
 debug
 core
 *.log
-build.sh
 bluepill/
 .bash_history
 nohup.out

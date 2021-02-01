@@ -1,0 +1,14 @@
+\ TEMPLATE FILE for STM32F103xx
+\ created by svdcutter for Mecrisp-Stellaris Forth by Matthias Koch
+\ sdvcutter  takes a CMSIS-SVD file plus a hand edited config.xml file as input 
+\ By Terry Porter "terry@tjporter.com.au", released under the GPL V2 Licence
+\   Modified by juju2013@github - 2020
+
+0x40011000 constant GPIOC ( General purpose I/O ) 
+GPIOC 0x0 + constant GPIOC-CRL ( Port configuration register low  GPIOn_CRL ) 
+GPIOC 0x4 + constant GPIOC-CRH ( Port configuration register high  GPIOn_CRL ) 
+GPIOC 0x8 + constant GPIOC-IDR ( Port input data register  GPIOn_IDR ) 
+GPIOC 0xC + constant GPIOC-ODR ( Port output data register  GPIOn_ODR ) 
+GPIOC 0x10 + constant GPIOC-BSRR ( Port bit set/reset register  GPIOn_BSRR ) 
+GPIOC 0x14 + constant GPIOC-BRR ( Port bit reset register  GPIOn_BRR ) 
+GPIOC 0x18 + constant GPIOC-LCKR ( Port configuration lock  register ) 

@@ -17,5 +17,5 @@ compiletoflash
 ." 10987654321098765432109876543210 " cr
 binary b32sloop. decimal ;
 
-
+: reg. cr dup @ hex. 1b. ;
 

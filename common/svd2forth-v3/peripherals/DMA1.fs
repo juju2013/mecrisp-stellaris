@@ -1,0 +1,37 @@
+\ TEMPLATE FILE for STM32F103xx
+\ created by svdcutter for Mecrisp-Stellaris Forth by Matthias Koch
+\ sdvcutter  takes a CMSIS-SVD file plus a hand edited config.xml file as input 
+\ By Terry Porter "terry@tjporter.com.au", released under the GPL V2 Licence
+\   Modified by juju2013@github - 2020
+
+0x40020000 constant DMA1 ( DMA controller ) 
+DMA1 0x0 + constant DMA1-ISR ( DMA interrupt status register  DMA_ISR ) 
+DMA1 0x4 + constant DMA1-IFCR ( DMA interrupt flag clear register  DMA_IFCR ) 
+DMA1 0x8 + constant DMA1-CCR1 ( DMA channel configuration register  DMA_CCR ) 
+DMA1 0xC + constant DMA1-CNDTR1 ( DMA channel 1 number of data  register ) 
+DMA1 0x10 + constant DMA1-CPAR1 ( DMA channel 1 peripheral address  register ) 
+DMA1 0x14 + constant DMA1-CMAR1 ( DMA channel 1 memory address  register ) 
+DMA1 0x1C + constant DMA1-CCR2 ( DMA channel configuration register  DMA_CCR ) 
+DMA1 0x20 + constant DMA1-CNDTR2 ( DMA channel 2 number of data  register ) 
+DMA1 0x24 + constant DMA1-CPAR2 ( DMA channel 2 peripheral address  register ) 
+DMA1 0x28 + constant DMA1-CMAR2 ( DMA channel 2 memory address  register ) 
+DMA1 0x30 + constant DMA1-CCR3 ( DMA channel configuration register  DMA_CCR ) 
+DMA1 0x34 + constant DMA1-CNDTR3 ( DMA channel 3 number of data  register ) 
+DMA1 0x38 + constant DMA1-CPAR3 ( DMA channel 3 peripheral address  register ) 
+DMA1 0x3C + constant DMA1-CMAR3 ( DMA channel 3 memory address  register ) 
+DMA1 0x44 + constant DMA1-CCR4 ( DMA channel configuration register  DMA_CCR ) 
+DMA1 0x48 + constant DMA1-CNDTR4 ( DMA channel 4 number of data  register ) 
+DMA1 0x4C + constant DMA1-CPAR4 ( DMA channel 4 peripheral address  register ) 
+DMA1 0x50 + constant DMA1-CMAR4 ( DMA channel 4 memory address  register ) 
+DMA1 0x58 + constant DMA1-CCR5 ( DMA channel configuration register  DMA_CCR ) 
+DMA1 0x5C + constant DMA1-CNDTR5 ( DMA channel 5 number of data  register ) 
+DMA1 0x60 + constant DMA1-CPAR5 ( DMA channel 5 peripheral address  register ) 
+DMA1 0x64 + constant DMA1-CMAR5 ( DMA channel 5 memory address  register ) 
+DMA1 0x6C + constant DMA1-CCR6 ( DMA channel configuration register  DMA_CCR ) 
+DMA1 0x70 + constant DMA1-CNDTR6 ( DMA channel 6 number of data  register ) 
+DMA1 0x74 + constant DMA1-CPAR6 ( DMA channel 6 peripheral address  register ) 
+DMA1 0x78 + constant DMA1-CMAR6 ( DMA channel 6 memory address  register ) 
+DMA1 0x80 + constant DMA1-CCR7 ( DMA channel configuration register  DMA_CCR ) 
+DMA1 0x84 + constant DMA1-CNDTR7 ( DMA channel 7 number of data  register ) 
+DMA1 0x88 + constant DMA1-CPAR7 ( DMA channel 7 peripheral address  register ) 
+DMA1 0x8C + constant DMA1-CMAR7 ( DMA channel 7 memory address  register ) 
