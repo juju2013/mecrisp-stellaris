@@ -8,3 +8,12 @@
 .gdbinit
 *.ini
 debug
+core
+*.log
+build.sh
+bluepill/
+.bash_history
+nohup.out
+bluepill.cfg
+openocd.cfg
+tmp.xml
