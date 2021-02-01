@@ -100,6 +100,14 @@ cd lm4f232
 make clean
 cd ..
 
+cd palanqin
+make clean
+cd ..
+
+cd palanqin-ra
+make clean
+cd ..
+
 cd tm4c1294
 make clean
 cd ..
@@ -260,6 +268,10 @@ cd stm32f411
 make clean
 cd ..
 
+cd stm32f411-ra
+make clean
+cd ..
+
 cd stm32f429
 make clean
 cd ..
@@ -285,6 +297,10 @@ make clean
 cd ..
 
 cd stm32g071rb-ra
+make clean
+cd ..
+
+cd stm32wb55
 make clean
 cd ..
 

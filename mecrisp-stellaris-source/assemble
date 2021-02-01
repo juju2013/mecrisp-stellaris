@@ -33,7 +33,7 @@ make clean all && ls -l *.bin && md5sum *.bin && cp *.bin ../../lpc1115fbd48-ra 
 cd ..
 
 cd lpc845m301
-make clean all && ls -l *.bin && md5sum *.bin && cp *.bin ../../lpc845m301 cp *.hex ../../lpc845m301
+make clean all && ls -l *.bin && md5sum *.bin && cp *.bin ../../lpc845m301 && cp *.hex ../../lpc845m301
 cd ..
 
 cd kl25z128
@@ -98,6 +98,14 @@ cd ..
 
 cd lm4f232
 make clean all && ls -l *.bin && md5sum *.bin && cp *.bin ../../lm4f232
+cd ..
+
+cd palanqin
+make clean all && ls -l *.bin && md5sum *.bin && cp *.bin ../../palanqin
+cd ..
+
+cd palanqin-ra
+make clean all && ls -l *.bin && md5sum *.bin && cp *.bin ../../palanqin-ra
 cd ..
 
 cd tm4c1294
@@ -260,6 +268,10 @@ cd stm32f411
 make clean all && ls -l *.bin && md5sum *.bin && cp *.bin ../../stm32f411
 cd ..
 
+cd stm32f411-ra
+make clean all && ls -l *.bin && md5sum *.bin && cp *.bin ../../stm32f411-ra
+cd ..
+
 cd stm32f429
 make clean all && ls -l *.bin && md5sum *.bin && cp *.bin ../../stm32f429
 cd ..
@@ -286,6 +298,10 @@ cd ..
 
 cd stm32g071rb-ra
 make clean all && ls -l *.bin && md5sum *.bin && cp *.bin ../../stm32g071rb-ra
+cd ..
+
+cd stm32wb55
+make clean all && ls -l *.bin && md5sum *.bin && cp *.bin ../../stm32wb55
 cd ..
 
 cd numworks-ra
@@ -485,6 +501,10 @@ arm-none-eabi-objcopy --change-addresses 0x08000000 -I binary -O ihex mecrisp-st
 cd ..
 
 cd stm32f411
+arm-none-eabi-objcopy --change-addresses 0x08000000 -I binary -O ihex mecrisp-stellaris-stm32f411.bin mecrisp-stellaris-stm32f411.hex
+cd ..
+
+cd stm32f411-ra
 arm-none-eabi-objcopy --change-addresses 0x08000000 -I binary -O ihex mecrisp-stellaris-stm32f411.bin mecrisp-stellaris-stm32f411.hex
 cd ..
 

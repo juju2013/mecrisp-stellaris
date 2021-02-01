@@ -102,6 +102,14 @@ cd lm4f232
 md5sum *.bin
 cd ..
 
+cd palanqin
+md5sum *.bin
+cd ..
+
+cd palanqin-ra
+md5sum *.bin
+cd ..
+
 cd tm4c1294
 md5sum *.bin
 cd ..
@@ -262,6 +270,10 @@ cd stm32f411
 md5sum *.bin
 cd ..
 
+cd stm32f411-ra
+md5sum *.bin
+cd ..
+
 cd stm32f429
 md5sum *.bin
 cd ..
@@ -287,6 +299,10 @@ md5sum *.bin
 cd ..
 
 cd stm32g071rb-ra
+md5sum *.bin
+cd ..
+
+cd stm32wb55
 md5sum *.bin
 cd ..
 

@@ -760,3 +760,42 @@
   - Contribution by Robert Clausecker:
     - New target: FreeBSD
     - Improved ELF handling
+
+16.02.2020, Matthias Koch, Mecrisp-Stellaris 2.5.3
+
+  - Fixed serious bug in RA compiler affecting comparisons:
+      Many thanks to Ivan Dimitrov for the bug report !
+
+  - Contribution by Peter Schmid:
+      New target: STM32WB55
+
+28.03.2020, Matthias Koch, Mecrisp-Stellaris 2.5.4
+
+  - Added RA for STM32F411
+  - Fixed eraseflash on XMC1100
+  - Fixed Bresenham ellipse graphics routine
+
+  - Contribution by Ivan Dimitrov:
+    - s31.32 Fixpoint <--> Single float conversion utilities
+
+28.06.2020, Matthias Koch, Mecrisp-Stellaris 2.5.4a
+
+  - Added graphics primitives for circles in Forth
+
+  - Contribution by Manfred Mahlow:
+      VIS extension
+
+01.11.2020, Matthias Koch, Mecrisp-Stellaris 2.5.5
+
+  - Faster implementation of "find"
+  - New experimental target: Palanqin by Robert Clausecker
+  - Cycle counter example for debug module on some targets
+
+  - Contribution by Robert Clausecker
+      Palanqin ARM Cortex M0 emulator for Intel 8088
+
+  - Contribution by Torsten Sadowski
+      Line follower robot code for Microbit
+
+  - Contribution by Mike Thompson
+      Terminal for STM32F429 on Nucleo-144 board

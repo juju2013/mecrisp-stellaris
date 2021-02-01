@@ -69,15 +69,9 @@ unhandled:                            @   and handler for unused interrupts
   Wortbirne Flag_visible, "reset" @ ( -- ) Hardware level reset
 Restart:
 @ ----------------------------------------------------------------------------- 
-  @--- GD32 specific ?
-  @DSB
-  
   ldr r0, =0xE000ED0C
   ldr r1, =0x5FA0004
   str r1, [r0]
-
-  @--- GD32 specific ?
-  @DSB
 
 @ -----------------------------------------------------------------------------
 @ Interrupt handler trampoline macro
