@@ -23,33 +23,39 @@
 @------------------------------------------------------------------------------
 @ Alle Interrupthandler funktionieren gleich und werden komfortabel mit einem Makro erzeugt:
 @ All interrupt handlers work the same way and are generated with a macro:
+@ 
+@ All interrupts generated code is too big for thumb, so it's split into 2 parts
+@ This is part1
 @------------------------------------------------------------------------------
+.ltorg
 
 interrupt pendsv
 interrupt bod_out
-interrupt wdt
-interrupt eint0
-interrupt eint1
-interrupt gpab
-interrupt gpcdf
-interrupt pwma
-interrupt timer0
-interrupt timer1
-interrupt timer2
-interrupt timer3
-interrupt uart0
-interrupt uart1
-interrupt spi0
-interrupt spi1
-interrupt spi2
-interrupt i2c0
-interrupt i2c1
-interrupt usb
-interrupt ps2
-interrupt pdma
-interrupt i2s
-interrupt pwrwu
-interrupt adc
-
+interrupt timer0  	
+interrupt timer1  	
+interrupt timer2  	
+interrupt timer3  	
+interrupt pwmwrap 	
+interrupt usbctrl 	
+interrupt xip 	    
+interrupt pio00 	  
+interrupt pio01 	  
+interrupt pio10 	  
+interrupt pio11 	  
+interrupt dma0 	  
+interrupt dma1 	  
+interrupt iobank0 	
+interrupt ioqspi 	
+interrupt sioproc0 
+interrupt sioproc1 
+interrupt clocks 	
+interrupt spi0 	  
+interrupt spi1 	  
+interrupt uart0 	  
+interrupt uart1 	  
+interrupt adcfifo 	
+interrupt i2c0 	  
+interrupt i2c1 	  
+interrupt rtc 	    
 .ltorg
-@------------------------------------------------------------------------------
+

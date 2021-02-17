@@ -24,14 +24,12 @@
 @ -----------------------------------------------------------------------------
 @ Swiches for capabilities of this chip
 @ -----------------------------------------------------------------------------
-
 .equ m0core, 2
 @ Not available: .equ charkommaavailable, 1
 
 @ -----------------------------------------------------------------------------
 @ Start with some essential macro definitions
 @ -----------------------------------------------------------------------------
-
 .include "../common/datastackandmacros.s"
 
 @ -----------------------------------------------------------------------------
@@ -42,34 +40,62 @@
 @ Constants for the size of the RAM memory
 
 .equ RamAnfang, 0x20000000 @ Start of RAM           Porting: Change this !
-.equ RamEnde,   0x20040000 @ End   of RAM.  256 kb. Porting: Change this !
+@.equ RamEnde,  0x20008000 @ End   of RAM.  256 kb. Porting: Change this !
+.equ RamEnde,   0x20008000 @ End   of RAM.  Only allocate first 32 kb, think SMP ...
 
 @ Constants for the size and layout of the flash memory
 
-.equ Kernschutzadresse,     0x00004000 @ Darunter wird niemals etwas geschrieben ! Mecrisp core never writes flash below this address.
-.equ FlashDictionaryAnfang, 0x00004000 @  16 kb für den Kern reserviert...            16 kb Flash reserved for core.
-.equ FlashDictionaryEnde,   0x00200000 @   2 mb Platz für das Flash-Dictionary         2 mb Flash available. Porting: Change this
+.equ Kernschutzadresse,     0x10004000 @ Darunter wird niemals etwas geschrieben ! Mecrisp core never writes flash below this address.
+.equ FlashDictionaryAnfang, 0x10004000 @  16 kb für den Kern reserviert...            16 kb Flash reserved for core.
+.equ FlashDictionaryEnde,   0x10020000 @  128kb Platz für das Flash-Dictionary   use only 128Kb flash
 .equ Backlinkgrenze,        RamAnfang  @ Ab dem Ram-Start.
 
-@ -----------------------------------------------------------------------------
-@ Anfang im Flash - Interruptvektortabelle ganz zu Beginn
-@ Flash start - Vector table has to be placed here
-@ -----------------------------------------------------------------------------
 .text    @ Hier beginnt das Vergnügen mit der Stackadresse und der Einsprungadresse
-.include "vectors.s"      @ You have to change vectors for Porting !
-.include "boot2_entry.s"  @ boot2 entry point is before VTOR
-
 @ -----------------------------------------------------------------------------
-@ Include the Forth core of Mecrisp-Stellaris
+@ Anfang im Flash
+@ Flash start
+@
+@ RP2040 don't have internal flash, but an on silicone bootrom @ 0x0. It will try
+@ to boot, among other things, from an unspecific external flash.
+@ On the flash, the first 252 bytes + 4 bytes CRC32 is the stage2 boot
+@ it's chip dependant and it's job is to setup a faster flash access with XIP cache.
+@ At the end of stage2, as per convention like PICO's C SDK, we'll branch to 0x10000100
+@ which in turn wil setup the "real" interrupt vetor table at 0x10000200 following 
+@ by the Reset code  which we'll branch to
 @ -----------------------------------------------------------------------------
- 
-.include "../common/forth-core.s"
-
-
+.include "boot2_w25q080.S"  @ Flash chip vendor dependant, this is for the PICO board
 
 @ -----------------------------------------------------------------------------
 @ RP2040 Power & clock
 @ -----------------------------------------------------------------------------
+    .equ SIO_BASE       , 0xd0000000
+    .equ CPUID          , 0                   @ Processor core identifier
+    
+    .equ vtor_register  , 0xe000ed08          @ VTOR Register
+
+    .equ CLOCKS_BASE    , 0x40008000          @ clocls base
+    .equ CLR_PERI_CTRL  , CLOCKS_BASE+0x48    @ Clock control, can be changed on-the-fly (except for auxsrc)
+    .equ CLOCK_UART     , BIT11               @ clock for UART
+    
+    .equ RESET_BASE     , 0x4000c000          @ reset control
+    .equ RESET_DONE     , RESET_BASE+0x8      @ bit set after reset
+    .equ RESET_UART0    , BIT22               @ UART0 Reset bit
+
+    .equ GPIO_FUNC_XIP  , 0    @ GPIO bank defaults to USER bank, as QSPI is used by external flash
+    .equ IO_BASE    , 0x40014000  @
+    .equ GPIO_FUNC_SPI  , 1
+    .equ GPIO_FUNC_UART , 2
+    .equ GPIO_FUNC_I2C  , 3
+    .equ GPIO_FUNC_PWM  , 4
+    .equ GPIO_FUNC_SIO  , 5
+    .equ GPIO_FUNC_PIO0 , 6
+    .equ GPIO_FUNC_PIO1 , 7
+    .equ GPIO_FUNC_GPCK , 8
+    .equ GPIO_FUNC_USB  , 9
+    .equ GPIO_FUNC_NULL , 0xf
+
+    .equ  PADS_BASE     , 0x4001c000          @ for pads
+    
     .equ CLK_BA     ,0x50000200
     .equ PWRCON     ,CLK_BA+0x00    @ R/W System Power-down Control Register 0x0000_001X 
     .equ AHBCLK     ,CLK_BA+0x04    @  R/W AHB Devices Clock Enable Control Register 0x0000_0004 
@@ -83,17 +109,91 @@
     .equ FRQDIV     ,CLK_BA+0x24    @  R/W Frequency Divider Control Register 0x0000_0000 
     .equ APBDIV     ,CLK_BA+0x2C    @  R/W APB Divider Control Register 0x0000_0000
 
+@ -----------------------------------------------------------------------------
+@ RP2040 Atomic Register Access
+@ -----------------------------------------------------------------------------
+.macro register_bit_XOR register, bitmask
+  ldr  r1, =#0x1000
+  ldr  r2, =\register
+  adds r2, r1  
+  ldr  r3, =\bitmask
+  str  r3, [r2]
+.endm
+.macro register_bit_set register, bitmask
+  ldr  r1, =#0x2000
+  ldr  r2, =\register
+  adds r2, r1  
+  ldr  r3, =\bitmask
+  str  r3, [r2]
+.endm
+.macro register_bit_clear register, bitmask
+  ldr  r1, =#0x3000
+  ldr  r2, =\register
+  adds r2, r1  
+  ldr  r3, =\bitmask
+  str  r3, [r2]
+.endm
 
+.org 0x100 @ stag2 boot will branch to here
+@ -----------------------------------------------------------------------------
+@ RP2040 Peripheral control
+@ -----------------------------------------------------------------------------
+.macro peripheral_reset peri
+  register_bit_set   RESET_BASE, \peri    @ trigger the reset
+  register_bit_clear RESET_BASE, \peri    @ trigger the reset
+  ldr  r3, =\peri
+  ldr  r1, =RESET_DONE
+1:
+  ldr  r2, [r1]                         @ check done register
+  ands r2, r3
+  beq  1b                               @ not yet
+.endm
+
+@ -----------------------------------------------------------------------------
+.global RP2040_init
+RP2040_init:
+@ -----------------------------------------------------------------------------
+@ Setup our own vector table for NVIC
+setup_vtor:
+  nop
+  ldr r0, =addresszero @ external flash adr via XIP
+  ldr r1, =vtor_register @ VTOR register
+  str r0, [r1]
+  bl Reset
+
+.ltorg
+
+@ -----------------------------------------------------------------------------
+@ Interrupt vector table
+@ -----------------------------------------------------------------------------
+.include "vectors.s"      @ You have to change vectors for Porting !
+
+@ -----------------------------------------------------------------------------
+@ Include the Forth core of Mecrisp-Stellaris
+@ -----------------------------------------------------------------------------
+ 
+.include "../common/forth-core.s"
+
+  
 @ -----------------------------------------------------------------------------
 .global Reset
 Reset: @ Einsprung zu Beginn
 @ -----------------------------------------------------------------------------
-RP2040_init:
-
     nop
-    @--- various board init
-    bl      Board_init
 
+// Check if this is core 0, and go to holding pen if not
+check_core:
+    ldr r0, =SIO_BASE
+    ldr r1, [r0, #CPUID]
+    cmp r1, #0
+    beq 2f
+
+1: @ stop the core1
+    wfi
+    b 1b
+    
+2: @ we can start core 0
+    
     @ Initialisierungen der Hardware, habe und brauche noch keinen Datenstack dafür
     @ Initialisations for Terminal hardware, without Datastack.
     bl uart_init
@@ -102,73 +202,12 @@ RP2040_init:
     .include "../common/catchflashpointers.s"
 
     welcome " with M0 core by Matthias Koch"
-    writeln "  modified for RP2040 by juju2013"
+    writeln "  modified for RP2040-PICO by juju2013"
     writeln ""
 
     @ Ready to fly ! 
     .include "../common/boot.s"
 
-@ -----------------------------------------------------------------------------
-Board_init: @ Initialize the board
-@ -----------------------------------------------------------------------------
-  push {lr}
 
-  bl      sys_unlock
-  
-  @--- init POR (TRM, page 55)
-  ldr     r1, =0x05AA5
-  ldr     r2, =PORCR
-  str     r1, [r2]
-  
-  ldr     r4, =PWRCON
-  @--- Internal 22Mhz clock
-  movs    r0, #0b01101 @ enable Internal 22M,10k & external crystal clock
-  ldr     r1, [r4]
-  orrs    r1, r0
-  movs    r1, #0x1C @ RE main.c
-  str     r1, [r4]
-  
-  @--- wait till clock stabilize
-  movs    r0, #BIT4
-  bl      Wait_clock
-  movs    r0, #BIT3
-  bl      Wait_clock
-  movs    r0, #BIT0
-  bl      Wait_clock
-  
-  @--- HCLK clock source selection
-  ldr     r4, =CLKSEL0
-  ldr     r1, [r4]
-  movs    r0, #0b0111
-  orrs    r1, r1, r0  @should be 0x3F
-  str     r1, [r4]
 
-  @--- HCLK clock frequence division
-  ldr     r4, =CLKDIV
-  movs    r0, #0
-  str     r0, [r4]
-  
-  @--- UART0 clock enable
-  ldr     r4, =APBCLK
-  ldr     r1, =BIT16
-  str     r1, [r4]
-  
-  bl      sys_lock
-
-  pop {pc}
-
-@ -----------------------------------------------------------------------------
-Wait_clock: @wait clock to stabilize or timeout
-@ r0 = wait mask
-@ -----------------------------------------------------------------------------
-  ldr     r3, =2160000    @ approx. 300ms
-  ldr     r1, =CLKSTATUS
-1: subs    r3, r3, #1
-  beq     2f
-  
-  ldr     r2, [r1]
-  ands    r2, r0
-  beq     1b
-  
-2:bx lr
-
+.ltorg

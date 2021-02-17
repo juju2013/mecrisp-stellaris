@@ -18,10 +18,11 @@
 @
 
 
+
 @ -----------------------------------------------------------------------------
 @ Interruptvektortabelle
 @ -----------------------------------------------------------------------------
-
+.org 0x200 @ see the main source file for the boot chain & VTOR arrangement
 .equ addresszero, . @ This is needed to circumvent address relocation issues.
 .word returnstackanfang  @ 00: Stack top address
 
@@ -44,48 +45,37 @@
 .word irq_vektor_systick+1	/*sys tick */	
 
 
-.word irq_vektor_bod_out+1  	/*Brown-out low voltage detected interrupt */	
-.word irq_vektor_wdt+1  	    /*Watchdog/Window Watchdog Timer interrupt */	
-.word irq_vektor_eint0+1		  /*External signal interrupt from PB.14 pin */	
-.word irq_vektor_eint1+1 	    /*External signal interrupt from PB.15 or PD.11 pin */	
-.word irq_vektor_gpab+1		    /*External signal interrupt from PA[15:0]/PB[13:0] */		
-.word irq_vektor_gpcdf+1  	  /*External interrupt from PC[15:0]/PD[15:0]/PF[3:0] */		
-.word irq_vektor_pwma+1  	        /*PWM0, PWM1, PWM2 and PWM3 interrupt */		
-.word 0				 		/*Reserved */		@ reserved
-.word irq_vektor_timer0+1  	        /*Timer 0 interrupt */		
-.word irq_vektor_timer1+1  	        /*Timer 1 interrupt */		
-.word irq_vektor_timer2+1  	        /*Timer 2 interrupt */		
-.word irq_vektor_timer3+1  	        /*Timer 3 interrupt */		
-.word irq_vektor_uart0+1  	        /*UART0 interrupt */		
-.word irq_vektor_uart1+1  	        /*UART1 interrupt */		
-.word irq_vektor_spi0+1  	        /*SPI0 interrupt */		
-.word irq_vektor_spi1+1  	        /*SPI1 interrupt */		
-.word irq_vektor_spi2+1  	        /*SPI2 interrupt */		
-.word 0				 		/*Reserved */		@ reserved
-.word irq_vektor_i2c0+1  	        /*I2C0 interrupt */		
-.word irq_vektor_i2c1+1  	        /*I2C1 interrupt */		
-.word 0				 		/*Reserved */		@ reserved
-.word 0				 		/*Reserved */		@ reserved
-.word 0				 		/*Reserved */		@ reserved
-.word irq_vektor_usb+1  	        /*USB 2.0 FS Device interrupt */		
-.word irq_vektor_ps2+1  	        /*PS/2 interrupt */		
-.word 0				 		/*Reserved */		@ reserved
-.word irq_vektor_pdma+1  	        /*PDMA interrupt */		
-.word irq_vektor_i2s+1  	        /*I2S interrupt */		
-.word irq_vektor_pwrwu+1  	        /*Clock controller interrupt for chip wake-up from Power-down state */		
-.word irq_vektor_adc+1  	        /*ADC interrupt */		
-.word 0				 		/*Reserved */		@ reserved
-.word 0				 		/*Reserved */		@ reserved
+.word irq_vektor_timer0+1  	        /*TIMER_IRQ_0 */		
+.word irq_vektor_timer1+1  	        /*TIMER_IRQ_1 */		
+.word irq_vektor_timer2+1  	        /*TIMER_IRQ_2 */		
+.word irq_vektor_timer3+1  	        /*TIMER_IRQ_3 */		
+.word irq_vektor_pwmwrap+1 	        /*PWM_IRQ_WRAP */		
+.word irq_vektor_usbctrl+1 	        /*USBCTRL_IRQ  */		
+.word irq_vektor_xip+1 	            /*XIP_IRQ  */		
+.word irq_vektor_pio00+1 	          /*PIO0_IRQ_0  */		
+.word irq_vektor_pio01+1 	          /*PIO0_IRQ_1  */		
+.word irq_vektor_pio10+1 	          /*PIO1_IRQ_0  */		
+.word irq_vektor_pio11+1 	          /*PIO1_IRQ_1  */		
+.word irq_vektor_dma0+1 	          /*DMA_IRQ_0  */		
+.word irq_vektor_dma1+1 	          /*DMA_IRQ_1  */		
+.word irq_vektor_iobank0+1 	        /*IO_IRQ_BANK0  */		
+.word irq_vektor_ioqspi+1 	        /*IO_IRQ_QSPI  */		
+.word irq_vektor_sioproc0+1 	      /*SIO_IRQ_PROC0  */		
+.word irq_vektor_sioproc1+1 	      /*SIO_IRQ_PROC1  */		
+.word irq_vektor_clocks+1 	        /*CLOCKS_IRQ  */		
+.word irq_vektor_spi0+1 	          /*SPI0_IRQ  */		
+.word irq_vektor_spi1+1 	          /*SPI1_IRQ  */		
+.word irq_vektor_uart0+1 	          /*UART0_IRQ  */		
+.word irq_vektor_uart1+1 	          /*UART1_IRQ  */		
+.word irq_vektor_adcfifo+1 	        /*ADC_IRQ_FIFO  */		
+.word irq_vektor_i2c0+1 	          /*I2C0_IRQ  */		
+.word irq_vektor_i2c1+1 	          /*I2C1_IRQ  */		
+.word irq_vektor_rtc+1 	            /*RTC_IRQ  */		
 
-@ -----------------------------------------------------------------------------
-@ Setup our own vector table for NVIC
-@ -----------------------------------------------------------------------------
-.global setup_vtor
-.equ vtor_register, 0xe000ed08
-setup_vtor:
-  ldr r0, =addresszero @ external flash adr via XIP
-  ldr r1, =vtor_register @ VTOR register
-  str r0, [r1]
-  blx Reset+1
-.pool
-
+@ XXX FIXME Should we ? will exceed thumb branch limit in boot.s :
+@.word irq_vektor_ispr26+1 	        /*ISPR only  */		
+@.word irq_vektor_ispr27+1 	        /*ISPR only  */		
+@.word irq_vektor_ispr28+1 	        /*ISPR only  */		
+@.word irq_vektor_ispr29+1 	        /*ISPR only  */		
+@.word irq_vektor_ispr30+1 	        /*ISPR only  */		
+@.word irq_vektor_ispr31+1 	        /*ISPR only  */		
