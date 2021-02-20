@@ -66,12 +66,11 @@ uart_init: @ Intialise the uart0
     str   r0, [r1, #0xc]      @ GPIO0/RX
     
     ldr   r1, =PADS_BASE
-    movs  r0, #0b00010100     @ OUTPUT
+    movs  r0, #0b01010110     @ OUTPUT
     str   r0, [r1, #0x4]
-
-    movs  r0, #0b11010110     @ INPUT
+    str   r0, [r1, #0x8]
     str   r0, [r1, #0xc]
-    
+
     bx lr
 
 .include "../common/terminalhooks.s"
