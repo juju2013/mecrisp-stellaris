@@ -42,6 +42,7 @@ interrupt pio00
 interrupt pio01 	  
 interrupt pio10 	  
 interrupt pio11 	  
+.ltorg
 interrupt dma0 	  
 interrupt dma1 	  
 interrupt iobank0 	
@@ -57,5 +58,12 @@ interrupt adcfifo
 interrupt i2c0 	  
 interrupt i2c1 	  
 interrupt rtc 	    
+
+interrupt ispr26
+interrupt ispr27
+interrupt ispr28
+interrupt ispr29
+interrupt ispr30
+interrupt ispr31
 .ltorg
 
