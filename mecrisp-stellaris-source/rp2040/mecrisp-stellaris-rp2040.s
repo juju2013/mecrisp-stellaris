@@ -193,10 +193,17 @@ check_core:
     b 1b
     
 2: @ we can start core 0
+
+  @--- reset/unreset sequence from SDK
+.equ RESET_MASK     , 0xffffcdbf
+.equ UNRESET_MASK   , 0x003c7ffe
+  register_bit_set   RESET_BASE,   RESET_MASK
+  register_bit_clear RESET_BASE, UNRESET_MASK
+
     @ Initialisierungen der Hardware, habe und brauche noch keinen Datenstack dafür
     @ Initialisations for Terminal hardware, without Datastack.
     bl uart_init
-
+Debug_Terminal_Init
     @ Catch the pointers for Flash dictionary
     .include "../common/catchflashpointers.s"
 

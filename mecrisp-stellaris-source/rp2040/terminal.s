@@ -59,18 +59,18 @@ uart_init: @ Intialise the uart0
     ldr   r1, =UARTCR
     str   r0, [r1]
     
-    @----- GPIO Pins for UART
-    movs  r0, #GPIO_FUNC_UART
-    ldr   r1, =IO_BASE
-    str   r0, [r1, #0x4]      @ GPIO0/TX
-    str   r0, [r1, #0xc]      @ GPIO0/RX
-    
-    ldr   r1, =PADS_BASE
-    movs  r0, #0b01010110     @ OUTPUT
-    str   r0, [r1, #0x4]
-    str   r0, [r1, #0x8]
-    str   r0, [r1, #0xc]
+    @----- GPIO PADS for UART
+    .equ  PAD_CONFIG, 0b01010110
+    register_bit_set (PADS_BASE+4), PAD_CONFIG 
+    register_bit_set (PADS_BASE+8), PAD_CONFIG 
 
+    @----- GPIO Pins for UART
+    .equ  GPIO_UART, 0x2
+    ldr   r0, =GPIO_UART
+    ldr   r1, =IO_BASE
+    str   r0, [r1, #0x4]
+    str   r0, [r1, #0xc]
+    
     bx lr
 
 .include "../common/terminalhooks.s"
