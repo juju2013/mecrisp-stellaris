@@ -73,9 +73,9 @@
 .word irq_vektor_rtc+1 	            /*RTC_IRQ  */		
 
 @ XXX FIXME Should we ? will exceed thumb branch limit in boot.s :
-.word irq_vektor_ispr26+1 	        /*ISPR only  */		
-.word irq_vektor_ispr27+1 	        /*ISPR only  */		
-.word irq_vektor_ispr28+1 	        /*ISPR only  */		
-.word irq_vektor_ispr29+1 	        /*ISPR only  */		
-.word irq_vektor_ispr30+1 	        /*ISPR only  */		
-.word irq_vektor_ispr31+1 	        /*ISPR only  */		
+.word irq_vektor_ispr+1 	        /*ISPR only  */		
+.word irq_vektor_ispr+1 	        /*ISPR only  */		
+.word irq_vektor_ispr+1 	        /*ISPR only  */		
+.word irq_vektor_ispr+1 	        /*ISPR only  */		
+.word irq_vektor_ispr+1 	        /*ISPR only  */		
+.word irq_vektor_ispr+1 	        /*ISPR only  */		
