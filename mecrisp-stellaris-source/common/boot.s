@@ -39,10 +39,10 @@
    beq 1f
      @ Gefunden ! Found !
      bl execute
-     b quit_intern
+     bl quit_intern
 1:
    drop @ Die 0-Adresse von find. Wird hier heruntergeworfen, damit der Startwert AFFEBEEF erhalten bleibt !
-   b quit @ Drop 0-address of find to keep magic TOS value intact.
+   bl quit @ Drop 0-address of find to keep magic TOS value intact.
 
 init_name: .byte 105, 110, 105, 116 @ "init"
 

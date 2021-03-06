@@ -16,3 +16,5 @@ nohup.out
 bluepill.cfg
 openocd.cfg
 tmp.xml
+*.uf2
+crc32

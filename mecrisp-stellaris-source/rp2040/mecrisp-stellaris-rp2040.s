@@ -202,8 +202,9 @@ check_core:
 
     @ Initialisierungen der Hardware, habe und brauche noch keinen Datenstack dafür
     @ Initialisations for Terminal hardware, without Datastack.
+    bl clocks_init
     bl uart_init
-Debug_Terminal_Init
+
     @ Catch the pointers for Flash dictionary
     .include "../common/catchflashpointers.s"
 
